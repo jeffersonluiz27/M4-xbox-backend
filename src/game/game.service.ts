@@ -13,9 +13,8 @@ export class GameService {
     return this.prisma.game.findMany();
   }
 
-  create(dto: CreateGameDto): Game {
-    const game: Game = { id: 'id_aleatorio', ...dto, title: undefined };
-    this.games.push(game);
-    return game;
+  create(dto: CreateGameDto) {
+    const data: Game = { ...dto };
+    return this.prisma.game.create({ data });
   }
 }

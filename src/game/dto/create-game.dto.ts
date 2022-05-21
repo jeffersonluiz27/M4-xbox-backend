@@ -30,7 +30,7 @@ export class CreateGameDto {
   @ApiProperty({
     description: 'Url do trailer do jogo',
   })
-  trailerYouTubeUrl?: string;
+  trailerYouTubeUrl: string;
 
   @ApiProperty({
     description: 'Url da gameplay do jogo',
