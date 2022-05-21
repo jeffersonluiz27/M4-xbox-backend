@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { GameService } from './game.service';
 import { Game } from './entities/game.entity';
 import { CreateGameDto } from './dto/create-game.dto';
@@ -13,12 +13,23 @@ export class GameController {
   @ApiOperation({
     summary: 'Listar todos os jogos',
   })
-  findAll() {
+  findAll(): Promise<Game[]> {
     return this.gameService.findAll();
   }
 
+  @Get(':id')
+  @ApiOperation({
+    summary: 'Visualizar um jogo',
+  })
+  findOne(@Param('id') id: string): Promise<Game> {
+    return this.gameService.findOne(id);
+  }
+
   @Post()
-  create(@Body() createGameDto: CreateGameDto) {
+  @ApiOperation({
+    summary: 'Cria um novo jogo',
+  })
+  create(@Body() createGameDto: CreateGameDto): Promise<Game> {
     return this.gameService.create(createGameDto);
   }
 }
