@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { IsNumber, IsPositive } from 'class-validator';
 
 export class CreateGameDto {
   @ApiProperty({
@@ -22,6 +23,8 @@ export class CreateGameDto {
   })
   year: Date;
 
+  @IsPositive()
+  @IsNumber()
   @ApiProperty({
     description: 'Classificação no IMDB (0 a 5)',
   })
