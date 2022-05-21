@@ -10,7 +10,7 @@ async function bootstrap() {
 
   const config = new DocumentBuilder()
     .setTitle('Xbox')
-    .setDescription('Aplicação para lojo de jogos Xbox')
+    .setDescription('Aplicação para loja de jogos tipo Xbox')
     .setVersion('1.0.0')
     .addTag('Status')
     .addTag('Games')
