@@ -12,9 +12,9 @@ async function bootstrap() {
     .setTitle('Xbox')
     .setDescription('Aplicação para lojo de jogos Xbox')
     .setVersion('1.0.0')
-    .addTag('status')
-    .addTag('jogo')
-    .addTag('genero')
+    .addTag('Status')
+    .addTag('Games')
+    .addTag('Genders')
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
