@@ -10,7 +10,7 @@ export class GameService {
     const game: Game = {
       id: 'id_aleatorio',
       ...createGameDto,
-      Nome: undefined,
+      title: undefined,
     };
     this.games.push(game);
     return game;
