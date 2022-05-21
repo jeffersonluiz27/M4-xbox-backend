@@ -13,9 +13,8 @@ export class GenderService {
     return this.prisma.gender.findMany();
   }
 
-  create(dto: CreateGenderDto): Gender {
-    const gender: Gender = { id: 'id_aleatorio', ...dto, name: undefined };
-    this.genders.push(gender);
-    return gender;
+  create(dto: CreateGenderDto): Promise<Gender> {
+    const data: Gender = { ...dto };
+    return this.prisma.gender.create({ data });
   }
 }
