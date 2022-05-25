@@ -18,7 +18,7 @@ import { UpdateGameDto } from './dto/update-game.dto';
 @ApiTags('Games')
 @Controller('game')
 export class GameController {
-  constructor(private gameService: GameService) {}
+  constructor(private readonly gameService: GameService) {}
 
   @Get()
   @ApiOperation({

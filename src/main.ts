@@ -15,6 +15,7 @@ async function bootstrap() {
     .addTag('Status')
     .addTag('Games')
     .addTag('Genders')
+    .addTag('Profiles')
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
