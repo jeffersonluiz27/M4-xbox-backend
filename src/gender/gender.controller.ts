@@ -16,7 +16,7 @@ import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { UpdateGenderDto } from './dto/update-gender.dto';
 
 @ApiTags('Genders')
-@Controller('Genders')
+@Controller('gender')
 export class GenderController {
   constructor(private genderService: GenderService) {}
 

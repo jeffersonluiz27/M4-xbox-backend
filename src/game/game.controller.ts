@@ -16,7 +16,7 @@ import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { UpdateGameDto } from './dto/update-game.dto';
 
 @ApiTags('Games')
-@Controller('Games')
+@Controller('game')
 export class GameController {
   constructor(private gameService: GameService) {}
 
