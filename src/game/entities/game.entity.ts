@@ -3,7 +3,7 @@ export class Game {
   title: string;
   coverImageUrl: string;
   description: string;
-  year: Date;
+  year: number;
   imdbScore: number;
   trailerYouTubeUrl: string;
   gameplayYouTubeUrl: string;

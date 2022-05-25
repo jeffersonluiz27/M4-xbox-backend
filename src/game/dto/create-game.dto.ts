@@ -24,9 +24,9 @@ export class CreateGameDto {
 
   @ApiProperty({
     description: 'Ano de lançamento do jogo',
-    example: '2004-01-01T00:00:00.000Z',
+    example: 2004,
   })
-  year: Date;
+  year: number;
 
   @IsPositive()
   @IsNumber()
