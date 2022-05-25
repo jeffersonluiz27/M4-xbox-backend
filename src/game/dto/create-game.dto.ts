@@ -1,13 +1,22 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNumber, IsPositive } from 'class-validator';
+import {
+  IsNumber,
+  IsPositive,
+  IsString,
+  IsUrl,
+  Min,
+  minDate,
+} from 'class-validator';
 
 export class CreateGameDto {
+  @IsString()
   @ApiProperty({
     description: 'O nome do jogo',
     example: 'GTA San Andreas',
   })
   title: string;
 
+  @IsUrl()
   @ApiProperty({
     description: 'Url da imagem do jogo',
     example:
@@ -22,6 +31,8 @@ export class CreateGameDto {
   })
   description: string;
 
+  @Min(1950)
+  @IsNumber()
   @ApiProperty({
     description: 'Ano de lançamento do jogo',
     example: 2004,
@@ -36,12 +47,14 @@ export class CreateGameDto {
   })
   imdbScore: number;
 
+  @IsUrl()
   @ApiProperty({
     description: 'Url do trailer do jogo',
     example: 'https://www.youtube.com/watch?v=u_CbHrBbHNQ',
   })
   trailerYouTubeUrl: string;
 
+  @IsUrl()
   @ApiProperty({
     description: 'Url da gameplay do jogo',
     example: 'https://www.youtube.com/watch?v=ZaqpcybxUqs',
