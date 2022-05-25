@@ -4,6 +4,7 @@ import {
   IsPositive,
   IsString,
   IsUrl,
+  Max,
   Min,
   minDate,
 } from 'class-validator';
@@ -41,6 +42,8 @@ export class CreateGameDto {
 
   @IsPositive()
   @IsNumber()
+  @Min(1)
+  @Max(5)
   @ApiProperty({
     description: 'Classificação no IMDB (0 a 5)',
     example: 4,
