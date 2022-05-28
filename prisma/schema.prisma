@@ -16,6 +16,8 @@ model Game {
   imdbScore          Int    @map("imdb_score ")
   trailerYouTubeUrl  String @map("trailer_youtube_url")
   gameplayYouTubeUrl String @map("gameplay_youtube_url")
+  genres Genre[]
+  profiles Profile[]
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
@@ -26,6 +28,7 @@ model Game {
 model Genre {
   id   String @id @default(uuid())
   name String @unique
+  games Game[]
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
@@ -40,6 +43,7 @@ model User {
   password String
   cpf      String  @unique
   isAdmin  Boolean @map("is_admin")
+  profile Profile[]
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
@@ -51,6 +55,9 @@ model Profile {
   id       String @id @default(uuid())
   title    String @unique
   imageUrl String @map("image_url")
+  user User @relation(fields: [userId], references: [id])
+  userId String @map("user_id")
+  games Game[]
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")

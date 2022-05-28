@@ -33,6 +33,7 @@ export class CreateUserDto {
   })
   confirmPassword: string;
 
+  @IsString()
   @ApiProperty({
     description: 'CPF do usuário.',
     example: '999.999.999-99',
@@ -41,7 +42,7 @@ export class CreateUserDto {
 
   @ApiProperty({
     description: 'Usuario é administrador?.',
-    example: true,
+    example: false,
   })
   isAdmin: boolean;
 }
