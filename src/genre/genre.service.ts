@@ -1,13 +1,9 @@
-import {
-  Injectable,
-  NotFoundException,
-  UnprocessableEntityException,
-} from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateGenreDto } from './dto/create-genre.dto';
 import { Genre } from './entities/genre.entity';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { UpdateGenreDto } from './dto/update-genre.dto';
-import { Prisma } from '@prisma/client';
+import { handleError } from 'src/utils/handle-error.util';
 
 @Injectable()
 export class GenreService {
@@ -33,36 +29,22 @@ export class GenreService {
 
   create(dto: CreateGenreDto): Promise<Genre> {
     const data: Genre = { ...dto };
-    return this.prisma.genre.create({ data }).catch(this.handleError);
+    return this.prisma.genre.create({ data }).catch(handleError);
   }
 
   async update(id: string, dto: UpdateGenreDto): Promise<Genre> {
     await this.findById(id);
     const data: Partial<Genre> = { ...dto };
-    return this.prisma.genre.update({
-      where: { id },
-      data,
-    });
+    return this.prisma.genre
+      .update({
+        where: { id },
+        data,
+      })
+      .catch(handleError);
   }
 
   async delete(id: string) {
-    try {
-      await this.prisma.genre.delete({ where: { id } });
-    } catch (e) {
-      if (e instanceof Prisma.PrismaClientKnownRequestError) {
-        if (e.code === 'P2025') {
-          console.log('Record to delete does not exist.');
-        }
-      }
-    }
-  }
-
-  handleError(error: Error): undefined {
-    const errorLines = error.message?.split('\n');
-    const lastErrorLine = errorLines[errorLines.length - 1]?.trim();
-
-    throw new UnprocessableEntityException(
-      lastErrorLine || 'Algum erro ocorreu ao executar a operação',
-    );
+    await this.findById(id);
+    await this.prisma.genre.delete({ where: { id } });
   }
 }

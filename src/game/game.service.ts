@@ -1,13 +1,9 @@
-import {
-  Injectable,
-  NotFoundException,
-  UnprocessableEntityException,
-} from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateGameDto } from './dto/create-game.dto';
 import { Game } from './entities/game.entity';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { UpdateGameDto } from './dto/update-game.dto';
-import { Prisma } from '@prisma/client';
+import { handleError } from 'src/utils/handle-error.util';
 
 @Injectable()
 export class GameService {
@@ -33,36 +29,22 @@ export class GameService {
 
   create(dto: CreateGameDto): Promise<Game> {
     const data: Game = { ...dto };
-    return this.prisma.game.create({ data }).catch(this.handleError);
+    return this.prisma.game.create({ data }).catch(handleError);
   }
 
   async update(id: string, dto: UpdateGameDto): Promise<Game> {
     await this.findById(id);
     const data: Partial<Game> = { ...dto };
-    return this.prisma.game.update({
-      where: { id },
-      data,
-    });
+    return this.prisma.game
+      .update({
+        where: { id },
+        data,
+      })
+      .catch(handleError);
   }
 
   async delete(id: string) {
-    try {
-      await this.prisma.game.delete({ where: { id } });
-    } catch (e) {
-      if (e instanceof Prisma.PrismaClientKnownRequestError) {
-        if (e.code === 'P2025') {
-          console.log('Record to delete does not exist.');
-        }
-      }
-    }
-  }
-
-  handleError(error: Error): undefined {
-    const errorLines = error.message?.split('\n');
-    const lastErrorLine = errorLines[errorLines.length - 1]?.trim();
-
-    throw new UnprocessableEntityException(
-      lastErrorLine || 'Algum erro ocorreu ao executar a operação',
-    );
+    await this.findById(id);
+    await this.prisma.game.delete({ where: { id } });
   }
 }

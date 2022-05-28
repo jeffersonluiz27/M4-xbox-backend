@@ -1,9 +1,5 @@
-import {
-  Injectable,
-  NotFoundException,
-  UnprocessableEntityException,
-} from '@nestjs/common';
-import { Prisma } from '@prisma/client';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { handleError } from 'src/utils/handle-error.util';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateProfileDto } from './dto/create-profile.dto';
 import { UpdateProfileDto } from './dto/update-profile.dto';
@@ -33,7 +29,7 @@ export class ProfileService {
 
   create(dto: CreateProfileDto): Promise<Profile> {
     const data: Profile = { ...dto };
-    return this.prisma.profile.create({ data }).catch(this.handleError);
+    return this.prisma.profile.create({ data }).catch(handleError);
   }
 
   async update(id: string, dto: UpdateProfileDto): Promise<Profile> {
@@ -44,27 +40,11 @@ export class ProfileService {
         where: { id },
         data,
       })
-      .catch(this.handleError);
+      .catch(handleError);
   }
 
   async delete(id: string) {
-    try {
-      await this.prisma.profile.delete({ where: { id } });
-    } catch (e) {
-      if (e instanceof Prisma.PrismaClientKnownRequestError) {
-        if (e.code === 'P2025') {
-          console.log('Record to delete does not exist.');
-        }
-      }
-    }
-  }
-
-  handleError(error: Error): undefined {
-    const errorLines = error.message?.split('\n');
-    const lastErrorLine = errorLines[errorLines.length - 1]?.trim();
-
-    throw new UnprocessableEntityException(
-      lastErrorLine || 'Algum erro ocorreu ao executar a operação',
-    );
+    await this.findById(id);
+    await this.prisma.profile.delete({ where: { id } });
   }
 }
