@@ -14,7 +14,11 @@ export class GenreService {
   }
 
   async findById(id: string): Promise<Genre> {
-    const record = await this.prisma.genre.findUnique({ where: { id } });
+    const record = await this.prisma.genre.findUnique({
+      where: {
+        id,
+      },
+    });
 
     if (!record) {
       throw new NotFoundException(`Registro com o '${id}' não encontrado.`);

@@ -20,6 +20,14 @@ import { UpdateGenreDto } from './dto/update-genre.dto';
 export class GenreController {
   constructor(private genreService: GenreService) {}
 
+  @Post()
+  @ApiOperation({
+    summary: 'Cria um novo genero',
+  })
+  create(@Body() dto: CreateGenreDto): Promise<Genre> {
+    return this.genreService.create(dto);
+  }
+
   @Get()
   @ApiOperation({
     summary: 'Listar todos os generos',
@@ -36,22 +44,11 @@ export class GenreController {
     return this.genreService.findOne(id);
   }
 
-  @Post()
-  @ApiOperation({
-    summary: 'Cria um novo genero',
-  })
-  create(@Body() dto: CreateGenreDto): Promise<Genre> {
-    return this.genreService.create(dto);
-  }
-
   @Patch(':id')
   @ApiOperation({
     summary: 'Editar um genero pelo ID',
   })
-  update(
-    @Param('id') id: string,
-    @Body() dto: UpdateGenreDto,
-  ): Promise<Genre> {
+  update(@Param('id') id: string, @Body() dto: UpdateGenreDto): Promise<Genre> {
     return this.genreService.update(id, dto);
   }
 

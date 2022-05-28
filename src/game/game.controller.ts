@@ -20,6 +20,14 @@ import { UpdateGameDto } from './dto/update-game.dto';
 export class GameController {
   constructor(private readonly gameService: GameService) {}
 
+  @Post()
+  @ApiOperation({
+    summary: 'Cria um novo jogo',
+  })
+  create(@Body() createGameDto: CreateGameDto): Promise<Game> {
+    return this.gameService.create(createGameDto);
+  }
+
   @Get()
   @ApiOperation({
     summary: 'Listar todos os jogos',
@@ -34,14 +42,6 @@ export class GameController {
   })
   findOne(@Param('id') id: string): Promise<Game> {
     return this.gameService.findOne(id);
-  }
-
-  @Post()
-  @ApiOperation({
-    summary: 'Cria um novo jogo',
-  })
-  create(@Body() createGameDto: CreateGameDto): Promise<Game> {
-    return this.gameService.create(createGameDto);
   }
 
   @Patch(':id')
