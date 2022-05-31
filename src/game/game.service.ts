@@ -48,10 +48,18 @@ export class GameService {
       imdbScore: dto.imdbScore,
       trailerYouTubeUrl: dto.trailerYouTubeUrl,
       gameplayYouTubeUrl: dto.gameplayYouTubeUrl,
+      genres: {
+        connect: dto.genres.map((gameId) => ({
+          id: gameId,
+        })),
+      },
     };
     return await this.prisma.game
       .create({
         data,
+        include: {
+          genres: true,
+        },
       })
       .catch(handleError);
   }
@@ -66,6 +74,11 @@ export class GameService {
       imdbScore: dto.imdbScore,
       trailerYouTubeUrl: dto.trailerYouTubeUrl,
       gameplayYouTubeUrl: dto.gameplayYouTubeUrl,
+      genres: {
+        connect: dto.genres.map((gameId) => ({
+          id: gameId,
+        })),
+      },
     };
     return await this.prisma.game
       .update({
