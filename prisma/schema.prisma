@@ -7,25 +7,60 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Game{
-  id String @id @default(uuid())
-  title String @unique
-  coverImageUrl String
-  description String
-  year DateTime
-  imdbScore Int
-  trailerYouTubeUrl String
-  gameplayYouTubeUrl String
+model Game {
+  id                 String    @id @default(uuid())
+  title              String    @unique
+  coverImageUrl      String    @map("cover_image_url")
+  description        String
+  year               Int
+  imdbScore          Int       @map("imdb_score ")
+  trailerYouTubeUrl  String    @map("trailer_youtube_url")
+  gameplayYouTubeUrl String    @map("gameplay_youtube_url")
+  genres             Genre[]
+  profiles           Profile[]
 
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  @@map("game")
 }
 
-model Gender{
-  id String @id @default(uuid())
-  name String @unique
+model Genre {
+  id    String @id @default(uuid())
+  name  String @unique
+  games Game[]
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("genre")
+}
+
+model User {
+  id       String    @id @default(uuid())
+  name     String
+  email    String    @unique
+  password String
+  cpf      String    @unique
+  isAdmin  Boolean   @map("is_admin")
+  profiles Profile[]
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("user")
+}
+
+model Profile {
+  id       String @id @default(uuid())
+  title    String @unique
+  imageUrl String @map("image_url")
+  user     User   @relation(fields: [userId], references: [id])
+  userId   String @map("user_id")
+  games    Game[]
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("profile")
 }
