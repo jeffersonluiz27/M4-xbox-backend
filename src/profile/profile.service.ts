@@ -38,7 +38,7 @@ export class ProfileService {
   }
 
   async create(dto: CreateProfileDto): Promise<Profile> {
-    if (dto.gameId) {
+    if (dto.games) {
       return await this.prisma.profile
         .create({
           data: {
@@ -46,9 +46,9 @@ export class ProfileService {
             imageUrl: dto.imageUrl,
             userId: dto.userId,
             games: {
-              connect: {
-                id: dto.gameId,
-              },
+              connect: dto.games.map((gameId) => ({
+                id: gameId,
+              })),
             },
           },
           include: { games: true, user: true },
@@ -70,7 +70,7 @@ export class ProfileService {
 
   async update(id: string, dto: UpdateProfileDto) {
     await this.findById(id);
-    if (dto.gameId) {
+    if (dto.games) {
       return this.prisma.profile
         .update({
           where: { id },
@@ -79,9 +79,9 @@ export class ProfileService {
             imageUrl: dto.imageUrl,
             userId: dto.userId,
             games: {
-              connect: {
-                id: dto.gameId,
-              },
+              connect: dto.games.map((gameId) => ({
+                id: gameId,
+              })),
             },
           },
           include: { games: true },
