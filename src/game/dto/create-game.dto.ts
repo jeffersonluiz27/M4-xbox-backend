@@ -66,9 +66,8 @@ export class CreateGameDto {
 
   @IsUUID(undefined, { each: true })
   @ApiProperty({
-    description: 'Lista com os IDs dos produtos que estão no pedido',
-    example:
-      '["04f66779-bcfa-4c5c-a140-f234138890f3", "adb96fd7-cdcf-43dc-9e1b-0c0a262111f9"]',
+    description: 'Lista com os IDs dos generos',
+    example: '["ID do genero aqui", "ID do genero aqui"]',
   })
   genres?: string[];
 
