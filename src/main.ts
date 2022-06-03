@@ -4,10 +4,14 @@ import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, {
+    cors: true,
+  });
 
+  //Validation decorators
   app.useGlobalPipes(new ValidationPipe());
 
+  //Swagger tags
   const config = new DocumentBuilder()
     .setTitle('Xbox')
     .setDescription('Aplicação para loja de jogos tipo Xbox')
@@ -17,11 +21,15 @@ async function bootstrap() {
     .addTag('Genres')
     .addTag('Profiles')
     .addTag('Users')
+    .addTag('Auth')
+    .addTag('Homepage')
+    .addBearerAuth()
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
 
-  await app.listen(3333);
+  //Sever Port or Local Port
+  await app.listen(process.env.PORT || 3333);
 }
 bootstrap();
