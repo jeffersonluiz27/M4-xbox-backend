@@ -75,7 +75,7 @@ export class GameService {
 
   async update(id: string, dto: UpdateGameDto, user: User) {
     if (user.isAdmin) {
-      await this.findById(id);
+      const gameAtual = await this.findById(id);
       const data: Prisma.GameUpdateInput = {
         title: dto.title,
         description: dto.description,
@@ -85,6 +85,9 @@ export class GameService {
         trailerYouTubeUrl: dto.trailerYouTubeUrl,
         gameplayYouTubeUrl: dto.gameplayYouTubeUrl,
         genres: {
+          disconnect: {
+            name: gameAtual.genres[0].name,
+          },
           connect: dto.genres.map((gameId) => ({
             id: gameId,
           })),

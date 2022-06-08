@@ -20,12 +20,12 @@ async function bootstrap() {
     .setDescription('Aplicação para loja de jogos tipo Xbox')
     .setVersion('1.0.0')
     .addTag('Status')
+    .addTag('Homepage')
     .addTag('Games')
     .addTag('Genres')
     .addTag('Profiles')
     .addTag('Users')
     .addTag('Auth')
-    .addTag('Homepage')
     .addBearerAuth()
     .build();
 

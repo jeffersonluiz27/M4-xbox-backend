@@ -71,5 +71,4 @@ export class CreateGameDto {
   })
   genres?: string[];
 
-  profiles?: string[];
 }
