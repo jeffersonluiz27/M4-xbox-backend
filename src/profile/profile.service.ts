@@ -18,12 +18,20 @@ export class ProfileService {
     });
   }
 
-  async findById(id: string): Promise<Profile> {
+  async findById(id: string) {
     const record = await this.prisma.profile.findUnique({
       where: {
         id: id,
       },
-      include: { games: true },
+      include: {
+        games: true,
+        favoriteGames: {
+          select: {
+            games: true,
+            id: true,
+          },
+        },
+      },
     });
 
     if (!record) {
@@ -33,7 +41,7 @@ export class ProfileService {
     return record;
   }
 
-  async findOne(id: string): Promise<Profile> {
+  async findOne(id: string) {
     return this.findById(id);
   }
 
@@ -46,9 +54,9 @@ export class ProfileService {
             imageUrl: dto.imageUrl,
             userId: dto.userId,
             games: {
-              connect: dto.games.map((gameId) => ({
-                id: gameId,
-              })),
+              connect: {
+                id: dto.games,
+              },
             },
           },
           include: { games: true, user: true },
@@ -69,28 +77,54 @@ export class ProfileService {
   }
 
   async update(id: string, dto: UpdateProfileDto) {
-    await this.findById(id);
+    const user = await this.findById(id);
+
     if (dto.games) {
-      return this.prisma.profile
-        .update({
-          where: { id },
-          data: {
-            title: dto.title,
-            imageUrl: dto.imageUrl,
-            userId: dto.userId,
-            games: {
-              connect: dto.games.map((gameId) => ({
-                id: gameId,
-              })),
+      let GameExist = false;
+      user.games.map((game) => {
+        if (game.id == dto.games) {
+          GameExist = true;
+        }
+      });
+      if (GameExist) {
+        return this.prisma.profile
+          .update({
+            where: { id: id },
+            data: {
+              title: dto.title,
+              imageUrl: dto.imageUrl,
+              userId: dto.userId,
+              games: {
+                disconnect: {
+                  id: dto.games,
+                },
+              },
             },
-          },
-          include: { games: true },
-        })
-        .catch(handleError);
+            include: { games: true },
+          })
+          .catch(handleError);
+      } else {
+        return this.prisma.profile
+          .update({
+            where: { id: id },
+            data: {
+              title: dto.title,
+              imageUrl: dto.imageUrl,
+              userId: dto.userId,
+              games: {
+                connect: {
+                  id: dto.games,
+                },
+              },
+            },
+            include: { games: true },
+          })
+          .catch(handleError);
+      }
     } else {
       return this.prisma.profile
         .update({
-          where: { id },
+          where: { id: id },
           data: {
             title: dto.title,
             imageUrl: dto.imageUrl,
@@ -99,6 +133,43 @@ export class ProfileService {
           include: { games: true },
         })
         .catch(handleError);
+    }
+  }
+
+  async addOrRemoveFavoriteGame(profileId: string, gameId: string) {
+    const user = await this.findById(profileId);
+    let favoritedGame = false;
+    user.favoriteGames.games.map((game) => {
+      if (gameId === game.id) {
+        favoritedGame = true;
+      }
+    });
+    if (favoritedGame) {
+      return await this.prisma.favoriteGames.update({
+        where: {
+          id: user.favoriteGames.id,
+        },
+        data: {
+          games: {
+            disconnect: {
+              id: gameId,
+            },
+          },
+        },
+      });
+    } else {
+      return await this.prisma.favoriteGames.update({
+        where: {
+          id: user.favoriteGames.id,
+        },
+        data: {
+          games: {
+            connect: {
+              id: gameId,
+            },
+          },
+        },
+      });
     }
   }
 

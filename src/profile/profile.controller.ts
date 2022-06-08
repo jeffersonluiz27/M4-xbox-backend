@@ -8,13 +8,19 @@ import {
   Delete,
   HttpCode,
   HttpStatus,
+  UseGuards,
 } from '@nestjs/common';
 import { ProfileService } from './profile.service';
 import { CreateProfileDto } from './dto/create-profile.dto';
 import { UpdateProfileDto } from './dto/update-profile.dto';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { AuthGuard } from '@nestjs/passport';
+import { LoggedUser } from 'src/auth/logged-user.decorator';
+import { User } from 'src/user/entities/user.entity';
 
 @ApiTags('Profiles')
+@UseGuards(AuthGuard())
+@ApiBearerAuth()
 @Controller('profile')
 export class ProfileController {
   constructor(private readonly profileService: ProfileService) {}
@@ -23,7 +29,7 @@ export class ProfileController {
   @ApiOperation({
     summary: 'Criar um perfil',
   })
-  create(@Body() createProfileDto: CreateProfileDto) {
+  create(@LoggedUser() user: User, @Body() createProfileDto: CreateProfileDto) {
     return this.profileService.create(createProfileDto);
   }
 
@@ -47,8 +53,26 @@ export class ProfileController {
   @ApiOperation({
     summary: 'Atualizar um perfil pelo ID',
   })
-  update(@Param('id') id: string, @Body() updateProfileDto: UpdateProfileDto) {
+  update(
+    @LoggedUser() user: User,
+    @Param('id') id: string,
+    @Body() updateProfileDto: UpdateProfileDto,
+  ) {
     return this.profileService.update(id, updateProfileDto);
+  }
+
+  @Patch('favoriteGame/:id')
+  @ApiOperation({
+    summary: 'Adicionar ou remover um game do favorito',
+  })
+  updateFavorite(
+    @Param('id') id: string,
+    @Body() UpdateProfileDto: UpdateProfileDto,
+  ) {
+    return this.profileService.addOrRemoveFavoriteGame(
+      id,
+      UpdateProfileDto.favoriteGameId,
+    );
   }
 
   @Delete(':id')
@@ -56,7 +80,7 @@ export class ProfileController {
   @ApiOperation({
     summary: 'Deletar um perfil pelo ID',
   })
-  delete(@Param('id') id: string) {
+  delete(@LoggedUser() user: User, @Param('id') id: string) {
     return this.profileService.delete(id);
   }
 }
