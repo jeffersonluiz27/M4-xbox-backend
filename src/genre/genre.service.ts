@@ -1,9 +1,14 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { CreateGenreDto } from './dto/create-genre.dto';
 import { Genre } from './entities/genre.entity';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { UpdateGenreDto } from './dto/update-genre.dto';
 import { handleError } from 'src/utils/handle-error.util';
+import { User } from 'src/user/entities/user.entity';
 
 @Injectable()
 export class GenreService {
@@ -31,24 +36,42 @@ export class GenreService {
     return this.findById(id);
   }
 
-  create(dto: CreateGenreDto): Promise<Genre> {
-    const data: Genre = { ...dto };
-    return this.prisma.genre.create({ data }).catch(handleError);
+  create(dto: CreateGenreDto, user: User): Promise<Genre> {
+    if (user.isAdmin) {
+      const data: Genre = { ...dto };
+      return this.prisma.genre.create({ data }).catch(handleError);
+    } else {
+      throw new UnauthorizedException(
+        'Usuário não tem permissão, porque não é ADMIN',
+      );
+    }
   }
 
-  async update(id: string, dto: UpdateGenreDto): Promise<Genre> {
-    await this.findById(id);
-    const data: Partial<Genre> = { ...dto };
-    return this.prisma.genre
-      .update({
-        where: { id },
-        data,
-      })
-      .catch(handleError);
+  async update(id: string, dto: UpdateGenreDto, user: User): Promise<Genre> {
+    if (user.isAdmin) {
+      await this.findById(id);
+      const data: Partial<Genre> = { ...dto };
+      return this.prisma.genre
+        .update({
+          where: { id },
+          data,
+        })
+        .catch(handleError);
+    } else {
+      throw new UnauthorizedException(
+        'Usuário não tem permissão, porque não é ADMIN!',
+      );
+    }
   }
 
-  async delete(id: string) {
-    await this.findById(id);
-    await this.prisma.genre.delete({ where: { id } });
+  async delete(id: string, user: User) {
+    if (user.isAdmin) {
+      await this.findById(id);
+      await this.prisma.genre.delete({ where: { id } });
+    } else {
+      throw new UnauthorizedException(
+        'Usuário não tem permissão, porque não é ADMIN!',
+      );
+    }
   }
 }
