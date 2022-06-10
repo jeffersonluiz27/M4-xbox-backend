@@ -18,20 +18,20 @@ export class CreateProfileDto {
 
   @IsString()
   @ApiProperty({
-    description: 'id do usuário',
-    example: 'Id do usuario Aqui',
+    description: 'Id do usuário',
+    example: 'ID',
   })
   userId: string;
 
   @ApiProperty({
-    description: 'id do game (opcional)',
-    example: '1d565ff0-d675-401a-98ae-52fbb2268f10',
+    description: 'Id do game (opcional)',
+    example: 'ID',
   })
   games?: string;
 
   @ApiProperty({
-    description: 'id do game para adicionar ou remover favoritos (opcional)',
-    example: '1d565ff0-d675-401a-98ae-52fbb2268f10',
+    description: 'Id do game para adicionar ou remover favoritos (opcional)',
+    example: 'ID',
   })
   favoriteGameId?: string;
 }

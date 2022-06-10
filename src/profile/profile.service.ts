@@ -25,7 +25,7 @@ export class ProfileService {
       },
       include: {
         games: true,
-        favoriteGames: {
+        favorites: {
           select: {
             games: true,
             id: true,
@@ -139,15 +139,15 @@ export class ProfileService {
   async addOrRemoveFavoriteGame(profileId: string, gameId: string) {
     const user = await this.findById(profileId);
     let favoritedGame = false;
-    user.favoriteGames.games.map((game) => {
+    user.favorites.games.map((game) => {
       if (gameId === game.id) {
         favoritedGame = true;
       }
     });
     if (favoritedGame) {
-      return await this.prisma.favoriteGames.update({
+      return await this.prisma.favorites.update({
         where: {
-          id: user.favoriteGames.id,
+          id: user.favorites.id,
         },
         data: {
           games: {
@@ -158,9 +158,9 @@ export class ProfileService {
         },
       });
     } else {
-      return await this.prisma.favoriteGames.update({
+      return await this.prisma.favorites.update({
         where: {
-          id: user.favoriteGames.id,
+          id: user.favorites.id,
         },
         data: {
           games: {

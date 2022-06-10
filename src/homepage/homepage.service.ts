@@ -19,7 +19,7 @@ export class HomepageService {
             genres: true,
           },
         },
-        favoriteGames: {
+        favorites: {
           include: {
             games: true,
           },
@@ -27,7 +27,7 @@ export class HomepageService {
       },
     });
     const listGames = profileData.games;
-    const favoriteGames = profileData.favoriteGames;
+    const favorites = profileData.favorites;
     const orderedGames = [];
     const allGenres = await this.prisma.genre.findMany();
     allGenres.map((genre) => {
@@ -47,7 +47,7 @@ export class HomepageService {
     });
     return {
       games: orderedGames,
-      favoriteGames: favoriteGames,
+      favorites: favorites,
     };
   }
 }
