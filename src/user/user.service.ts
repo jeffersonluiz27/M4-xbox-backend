@@ -2,6 +2,7 @@ import {
   BadRequestException,
   Injectable,
   NotFoundException,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { handleError } from 'src/utils/handle-error.util';
 import { PrismaService } from 'src/prisma/prisma.service';
@@ -25,8 +26,14 @@ export class UserService {
   };
   constructor(private readonly prisma: PrismaService) {}
 
-  findAll(): Promise<User[]> {
-    return this.prisma.user.findMany({ select: this.userSelect });
+  findAll(user: User): Promise<User[]> {
+    if (user.isAdmin) {
+      return this.prisma.user.findMany({ select: this.userSelect });
+    } else {
+      throw new UnauthorizedException(
+        'Usuário não tem permissão, porque não é ADMIN!',
+      );
+    }
   }
 
   async findById(id: string): Promise<User> {
@@ -50,10 +57,11 @@ export class UserService {
     if (!cpf.isValid(dto.cpf)) {
       throw new BadRequestException('O cpf não é válido');
     }
-    if (dto.password != dto.confirmPassword) {
+    if (dto.password !== dto.confirmPassword) {
       throw new BadRequestException('As senhas informadas não são iguais.');
     }
     delete dto.confirmPassword;
+
     const data: User = {
       ...dto,
       password: await bcrypt.hash(dto.password, 10),
@@ -71,13 +79,11 @@ export class UserService {
     await this.findById(id);
 
     if (dto.cpf) {
-      if (!cpf.isValid(dto.cpf)) {
-        throw new BadRequestException('O cpf não é valido');
-      }
+      throw new BadRequestException('Não é possivel alterar o CPF');
     }
 
     if (dto.password) {
-      if (dto.password != dto.confirmPassword) {
+      if (dto.password !== dto.confirmPassword) {
         throw new BadRequestException('As senhas informadas não são iguais.');
       }
     }

@@ -2,26 +2,37 @@ import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { NestExpressApplication } from '@nestjs/platform-express';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create<NestExpressApplication>(AppModule, {
+    cors: true,
+  });
 
+  app.set('trust proxy', 1);
+
+  //Validation decorators
   app.useGlobalPipes(new ValidationPipe());
 
+  //Swagger tags
   const config = new DocumentBuilder()
     .setTitle('Xbox')
     .setDescription('Aplicação para loja de jogos tipo Xbox')
     .setVersion('1.0.0')
     .addTag('Status')
+    .addTag('Homepage')
     .addTag('Games')
     .addTag('Genres')
     .addTag('Profiles')
     .addTag('Users')
+    .addTag('Auth')
+    .addBearerAuth()
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
 
-  await app.listen(3333);
+  //Sever Port or Local Port
+  await app.listen(process.env.PORT || 3333);
 }
 bootstrap();

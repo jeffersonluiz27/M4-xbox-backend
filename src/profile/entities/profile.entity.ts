@@ -7,6 +7,7 @@ export class Profile {
   imageUrl: string;
   user?: User;
   games?: Game[];
+  favorites?: Game[];
   createdAt?: Date;
   updatedAt?: Date;
 }

@@ -11,7 +11,6 @@ export class Game {
   trailerYouTubeUrl: string;
   gameplayYouTubeUrl: string;
   genres?: Genre[];
-  profiles?: Profile[];
   createdAt?: Date;
   updatedAt?: Date;
 }
