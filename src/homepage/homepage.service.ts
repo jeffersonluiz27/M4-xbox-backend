@@ -34,7 +34,6 @@ export class HomepageService {
       const gamesperGenre = [];
       listGames.map((game) => {
         if (game.genres[0].name == genre.name) {
-          console.log(game.title);
           gamesperGenre.push({
             id: game.id,
             title: game.title,
@@ -48,7 +47,6 @@ export class HomepageService {
         title: gamesperGenre,
       };
       if (gamesperGenre.length !== 0) {
-        console.log(genderObj);
         orderedGames.push(genderObj);
       }
     });
