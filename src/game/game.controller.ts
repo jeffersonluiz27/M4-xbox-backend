@@ -30,10 +30,7 @@ export class GameController {
   @ApiOperation({
     summary: 'Cria um novo jogo',
   })
-  create(
-    @LoggedUser() user: User,
-    @Body() createGameDto: CreateGameDto,
-  ): Promise<Game> {
+  create(@LoggedUser() user: User, @Body() createGameDto: CreateGameDto) {
     return this.gameService.create(createGameDto, user);
   }
 
@@ -41,7 +38,7 @@ export class GameController {
   @ApiOperation({
     summary: 'Listar todos os jogos',
   })
-  findAll(): Promise<Game[]> {
+  findAll() {
     return this.gameService.findAll();
   }
 
@@ -49,7 +46,7 @@ export class GameController {
   @ApiOperation({
     summary: 'Visualizar um jogo',
   })
-  findOne(@Param('id') id: string): Promise<Game> {
+  findOne(@Param('id') id: string) {
     return this.gameService.findOne(id);
   }
 
@@ -61,7 +58,7 @@ export class GameController {
     @LoggedUser() user: User,
     @Param('id') id: string,
     @Body() dto: UpdateGameDto,
-  ): Promise<Game> {
+  ) {
     return this.gameService.update(id, dto, user);
   }
 

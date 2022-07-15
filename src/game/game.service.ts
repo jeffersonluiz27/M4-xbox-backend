@@ -15,7 +15,7 @@ import { User } from 'src/user/entities/user.entity';
 export class GameService {
   constructor(private readonly prisma: PrismaService) {}
 
-  findAll(): Promise<Game[]> {
+  findAll() {
     return this.prisma.game.findMany({
       include: {
         genres: true,
@@ -23,7 +23,7 @@ export class GameService {
     });
   }
 
-  async findById(id: string): Promise<Game> {
+  async findById(id: string) {
     const record = await this.prisma.game.findUnique({
       where: {
         id: id,
@@ -40,11 +40,11 @@ export class GameService {
     return record;
   }
 
-  async findOne(id: string): Promise<Game> {
+  async findOne(id: string) {
     return this.findById(id);
   }
 
-  async create(dto: CreateGameDto, user: User): Promise<Game> {
+  async create(dto: CreateGameDto, user: User) {
     if (user.isAdmin) {
       const data: Prisma.GameCreateInput = {
         title: dto.title,
@@ -55,9 +55,9 @@ export class GameService {
         trailerYouTubeUrl: dto.trailerYouTubeUrl,
         gameplayYouTubeUrl: dto.gameplayYouTubeUrl,
         genres: {
-          connect: dto.genres.map((gameId) => ({
-            id: gameId,
-          })),
+          connect: {
+            id: dto.genres,
+          },
         },
       };
       return await this.prisma.game
@@ -86,11 +86,11 @@ export class GameService {
         gameplayYouTubeUrl: dto.gameplayYouTubeUrl,
         genres: {
           disconnect: {
-            name: gameAtual.genres[0].name,
+            id: gameAtual.genres[0].id,
           },
-          connect: dto.genres.map((gameId) => ({
-            id: gameId,
-          })),
+          connect: {
+            id: dto.genres,
+          },
         },
       };
       return await this.prisma.game
