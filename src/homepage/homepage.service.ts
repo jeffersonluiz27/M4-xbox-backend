@@ -41,7 +41,9 @@ export class HomepageService {
         }
       });
       const genderObj = {
-        genre: genre.name,
+        genre: {
+          name: genre.name,
+        },
         game: {
           id: gamesperGenre[0],
           title: gamesperGenre[1],
