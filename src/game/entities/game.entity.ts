@@ -10,7 +10,7 @@ export class Game {
   imdbScore: number;
   trailerYouTubeUrl: string;
   gameplayYouTubeUrl: string;
-  genres?: Genre[];
+  genres?: string;
   createdAt?: Date;
   updatedAt?: Date;
 }
