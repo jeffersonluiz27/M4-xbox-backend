@@ -42,6 +42,7 @@ export class HomepageService {
       });
       const genderObj = {
         genre: {
+          id: genre.id,
           name: genre.name,
         },
         game: {
