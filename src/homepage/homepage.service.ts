@@ -34,12 +34,20 @@ export class HomepageService {
       const gamesperGenre = [];
       listGames.map((game) => {
         if (game.genres[0].name == genre.name) {
+          gamesperGenre.push(game.id);
           gamesperGenre.push(game.title);
+          gamesperGenre.push(game.coverImageUrl);
+          gamesperGenre.push(game.imdbScore);
         }
       });
       const genderObj = {
         genre: genre.name,
-        title: gamesperGenre,
+        game: {
+          id: gamesperGenre[0],
+          title: gamesperGenre[1],
+          Image: gamesperGenre[2],
+          imdb: gamesperGenre[3],
+        },
       };
       if (gamesperGenre.length !== 0) {
         orderedGames.push(genderObj);
