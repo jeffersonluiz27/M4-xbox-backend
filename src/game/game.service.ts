@@ -110,7 +110,15 @@ export class GameService {
   async delete(id: string, user: User) {
     if (user.isAdmin) {
       await this.findById(id);
-      await this.prisma.game.delete({ where: { id } });
+      try {
+        await this.prisma.game.delete({ where: { id } });
+      } catch (e) {
+        if (e instanceof Prisma.PrismaClientKnownRequestError) {
+          if (e.code === 'P2025') {
+            console.log('Record to delete does not exist.');
+          }
+        }
+      }
     } else {
       throw new UnauthorizedException('Usuário não tem permissão para deletar');
     }

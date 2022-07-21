@@ -11,6 +11,7 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
 import * as bcrypt from 'bcrypt';
 import { cpf } from 'cpf-cnpj-validator';
+import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class UserService {
@@ -110,6 +111,14 @@ export class UserService {
 
   async delete(id: string) {
     await this.findById(id);
-    await this.prisma.user.delete({ where: { id } });
+    try {
+      await this.prisma.user.delete({ where: { id } });
+    } catch (e) {
+      if (e instanceof Prisma.PrismaClientKnownRequestError) {
+        if (e.code === 'P2025') {
+          console.log('Record to delete does not exist.');
+        }
+      }
+    }
   }
 }

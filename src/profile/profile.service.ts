@@ -4,6 +4,7 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateProfileDto } from './dto/create-profile.dto';
 import { UpdateProfileDto } from './dto/update-profile.dto';
 import { Profile } from './entities/profile.entity';
+import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class ProfileService {
@@ -192,6 +193,14 @@ export class ProfileService {
 
   async delete(id: string) {
     await this.findById(id);
-    await this.prisma.profile.delete({ where: { id } });
+    try {
+      await this.prisma.profile.delete({ where: { id } });
+    } catch (e) {
+      if (e instanceof Prisma.PrismaClientKnownRequestError) {
+        if (e.code === 'P2025') {
+          console.log('Record to delete does not exist.');
+        }
+      }
+    }
   }
 }

@@ -9,6 +9,7 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { UpdateGenreDto } from './dto/update-genre.dto';
 import { handleError } from 'src/utils/handle-error.util';
 import { User } from 'src/user/entities/user.entity';
+import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class GenreService {
@@ -67,7 +68,15 @@ export class GenreService {
   async delete(id: string, user: User) {
     if (user.isAdmin) {
       await this.findById(id);
-      await this.prisma.genre.delete({ where: { id } });
+      try {
+        await this.prisma.genre.delete({ where: { id } });
+      } catch (e) {
+        if (e instanceof Prisma.PrismaClientKnownRequestError) {
+          if (e.code === 'P2025') {
+            console.log('Record to delete does not exist.');
+          }
+        }
+      }
     } else {
       throw new UnauthorizedException(
         'Usuário não tem permissão, porque não é ADMIN!',
