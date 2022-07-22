@@ -33,7 +33,7 @@ export class HomepageService {
     allGenres.map((genre) => {
       const gamesperGenre = [];
       listGames.map((game) => {
-        if (game.genres[0].name == genre.name) {
+        if (game.genres.map.name == genre.name) {
           gamesperGenre.push({
             id: game.id,
             title: game.title,

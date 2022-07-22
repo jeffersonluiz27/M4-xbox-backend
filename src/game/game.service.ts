@@ -85,9 +85,6 @@ export class GameService {
         trailerYouTubeUrl: dto.trailerYouTubeUrl,
         gameplayYouTubeUrl: dto.gameplayYouTubeUrl,
         genres: {
-          disconnect: {
-            id: gameAtual.genres[0].id,
-          },
           connect: {
             id: dto.genres,
           },
