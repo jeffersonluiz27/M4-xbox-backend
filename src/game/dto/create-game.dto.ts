@@ -1,6 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import {
   IsNumber,
+  IsOptional,
   IsPositive,
   IsString,
   IsUrl,
@@ -65,9 +66,10 @@ export class CreateGameDto {
   gameplayYouTubeUrl: string;
 
   @IsUUID(undefined, { each: true })
+  @IsOptional()
   @ApiProperty({
-    description: 'Id do genero',
-    example: 'ID',
+    description: 'Id do genero ou generos',
+    example: '["ID","ID"]',
   })
-  genres?: string;
+  genres?: string[];
 }

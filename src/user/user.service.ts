@@ -21,9 +21,7 @@ export class UserService {
     email: true,
     password: false,
     cpf: true,
-    isAdmin: false,
-    createdAt: true,
-    updatedAt: true,
+    isAdmin: true,
   };
   constructor(private readonly prisma: PrismaService) {}
 
@@ -116,7 +114,7 @@ export class UserService {
     } catch (e) {
       if (e instanceof Prisma.PrismaClientKnownRequestError) {
         if (e.code === 'P2025') {
-          console.log('Record to delete does not exist.');
+          console.log('Registro a ser deletado não existe!');
         }
       }
     }

@@ -16,8 +16,7 @@ model Game {
   imdbScore          Int         @map("imdb_score ")
   trailerYouTubeUrl  String      @map("trailer_youtube_url")
   gameplayYouTubeUrl String      @map("gameplay_youtube_url")
-  genres             Genre?      @relation(fields: [genreId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  genreId            String?     @map("genre_id")
+  genres             Genre[]     @relation("genre-games")
   profiles           Profile[]
   favorites          Favorites[]
 
@@ -31,7 +30,7 @@ model Game {
 model Genre {
   id    String @id @default(uuid())
   name  String @unique
-  games Game[]
+  games Game[] @relation("genre-games")
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")

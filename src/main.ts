@@ -16,16 +16,16 @@ async function bootstrap() {
 
   //Swagger tags
   const config = new DocumentBuilder()
-    .setTitle('Xbox')
+    .setTitle('Game Live Server')
     .setDescription('Aplicação para loja de jogos tipo Xbox')
-    .setVersion('1.0.0')
+    .setVersion('1.1.0')
     .addTag('Status')
+    .addTag('Auth')
     .addTag('Homepage')
     .addTag('Games')
     .addTag('Genres')
     .addTag('Profiles')
     .addTag('Users')
-    .addTag('Auth')
     .addBearerAuth()
     .build();
 

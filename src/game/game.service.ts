@@ -18,7 +18,11 @@ export class GameService {
   findAll() {
     return this.prisma.game.findMany({
       include: {
-        genres: true,
+        genres: {
+          select: {
+            name: true,
+          },
+        },
       },
     });
   }
@@ -55,16 +59,20 @@ export class GameService {
         trailerYouTubeUrl: dto.trailerYouTubeUrl,
         gameplayYouTubeUrl: dto.gameplayYouTubeUrl,
         genres: {
-          connect: {
-            id: dto.genres,
-          },
+          connect: dto.genres?.map((genresID) => ({
+            id: genresID,
+          })),
         },
       };
       return await this.prisma.game
         .create({
           data,
           include: {
-            genres: true,
+            genres: {
+              select: {
+                name: true,
+              },
+            },
           },
         })
         .catch(handleError);
@@ -85,9 +93,12 @@ export class GameService {
         trailerYouTubeUrl: dto.trailerYouTubeUrl,
         gameplayYouTubeUrl: dto.gameplayYouTubeUrl,
         genres: {
-          connect: {
-            id: dto.genres,
-          },
+          disconnect: gameAtual.genres?.map((genreID) => ({
+            id: genreID.id,
+          })),
+          connect: dto.genres?.map((genresID) => ({
+            id: genresID,
+          })),
         },
       };
       return await this.prisma.game
@@ -95,7 +106,11 @@ export class GameService {
           where: { id },
           data,
           include: {
-            genres: true,
+            genres: {
+              select: {
+                name: true,
+              },
+            },
           },
         })
         .catch(handleError);

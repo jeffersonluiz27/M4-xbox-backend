@@ -23,7 +23,11 @@ export class HomepageService {
     });
     const gameData = await this.prisma.game.findMany({
       include: {
-        genres: true,
+        genres: {
+          select: {
+            name: true,
+          },
+        },
       },
     });
     const listGames = gameData;
@@ -33,14 +37,16 @@ export class HomepageService {
     allGenres.map((genre) => {
       const gamesperGenre = [];
       listGames.map((game) => {
-        if (game.genres.name == genre.name) {
-          gamesperGenre.push({
-            id: game.id,
-            title: game.title,
-            coverImageUrl: game.coverImageUrl,
-            imdbScore: game.imdbScore,
-          });
-        }
+        game.genres.map((gamegenre) => {
+          if (gamegenre.name == genre.name) {
+            gamesperGenre.push({
+              id: game.id,
+              title: game.title,
+              coverImageUrl: game.coverImageUrl,
+              imdbScore: game.imdbScore,
+            });
+          }
+        });
       });
       const genderObj = {
         genre: genre.name,

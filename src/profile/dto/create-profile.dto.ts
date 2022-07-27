@@ -5,14 +5,15 @@ export class CreateProfileDto {
   @IsString()
   @ApiProperty({
     description: 'O nome do perfil',
-    example: 'Brian',
+    example: 'John',
   })
   title: string;
 
   @IsUrl()
   @ApiProperty({
     description: 'Url da imagem do perfil',
-    example: 'https://avatars.githubusercontent.com/u/7906171',
+    example:
+      'https://www.business2community.com/wp-content/uploads/2017/08/blank-profile-picture-973460_640.png',
   })
   imageUrl: string;
 
